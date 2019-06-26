@@ -1,0 +1,53 @@
+title: Ksenia the SDE :)
+author: Ksenia Bobrova
+email: bobrovaksenia@gmail.com
+description: > # this means to ignore newlines until "show_exerpts:"
+  I'm Ksenia, russian expat in Germany and Software Developer. Programming is my hobby and my job, 
+  in this blog I'm writing exclusively about tech.
+show_excerpts: true # set to true to show excerpts on the homepage
+
+# Minima date format
+# refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
+sass:
+  sass_dir: _sass
+plainwhite:
+  name: Ksenia Bobrova
+  tagline: Software Developer. 
+  date_format: "%b %-d, %Y"
+  sitemap: true # set to true to generate sitemap.xml content
+
+  # generate social links in footer
+  social_links:
+    github:  almaleksia
+    linkedIn: in/ksenia-bobrova-8a2a908a
+    # dribbble: jekyll
+    # facebook: jekyll
+    # flickr:   jekyll
+    # instagram: jekyll
+    # linkedin: jekyll
+    # pinterest: jekyll
+    # youtube: jekyll
+    # youtube_channel: UC8CXR0-3I70i1tfPg1PAE1g
+    # youtube_channel_name: CloudCannon
+    # telegram: jekyll
+    # googleplus: +jekyll
+    # microdotblog: jekyll
+
+    # Mastodon instances
+    # mastodon:
+    # - username: jekyll
+    #   instance: example.com
+    # - username: jekyll2
+    #   instance: example.com
+
+# If you want to link only specific pages in your header, uncomment
+# this and add the path to the pages in order as they should show up
+#header_pages:
+# - about.md
+
+# Build settings
+theme: plainwhite
+
+plugins:
+  - jekyll-seo-tag
+#  - jekyll-feed
