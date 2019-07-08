@@ -57,6 +57,30 @@ API request may look like this:
 
 {% highlight json %}
 ...
+  "StartTime": "2019-06-20T15:00:00"
+...   
+{% endhighlight %}
+
+StartTime is UTC offset and can be stored by a server as is. When client app requests calendar event it will be returned in UTC, and should be converted to local time zone again - locally. That's easy because client application is always aware of user's time zone.
+
+### You just got fooled
+
+Now, when UTC offset seems like legitimate way to handle time zones, let's see why it's not and you should, no, must store local time and local time zone instead.
+
+Here they are - "highly hypothetical" requirements, that you won't be able to fulfill if you rely only on UTC offset.
+
+1. Client app developers want to know local time for their time zone independent scenarios. Sometimes users don't need time zone adjustments. If I set a reminder to do my workout at 8pm, it will be always 8pm - no matter I'm in New York or in Moscow. Would be weird if I opened my reminder app after Moscow -> New York flight and found my reminder suddenly shifted to the afternoon. Reminder fixed to local time fits this use case much better.
+
+2. Background analytics jobs. I want to know for what time of day users create more events. UTC offsets are completely useless for this task unless local time is present.
+
+3. Integration with external systems. Some API implement their own (not always optimal) approach to dates. For example, there are APIs that are not timezone aware and do not accept UTC offsets as input. For such cases you need local date time. Some APIs are time zone aware but still do not accept UTC offsets, for example [Outlook Task REST API][outlook-api]. You need local time zone to update due date of a task.
+
+So instead of asking client apps for UTC offset it's better to ask for local time + time zone. In this way you'll get to solve problems above and many others that may occur very easily.
+
+API request may look like this:
+
+{% highlight json %}
+...
   "StartTime":{ 
     "DateTime":"2019-06-20T17:00:00",
     "Timezone":"Europe/Berlin"
@@ -75,21 +99,6 @@ Or like this (for clients that prefer windows system time zones):
 ...   
 {% endhighlight %}
 
-The only thing server should do is to convert given local date time to UTC date and time and store it in database.
-When client app requests calendar event it will be returned in UTC, and should be converted to local time zone again - locally. That's easy because client application is always aware of user's time zone.
-
-### You just got fooled
-
-Now, when UTC offset seems like legitimate way to handle time zones, let's see why it's not and you should, no, must store local time and local time zone instead.
-
-Here they are - "highly hypothetical" requirements, that you won't be able to fulfill if you rely only on UTC offset.
-
-1. Client app developers want to know local time for their time zone independent scenarios. Sometimes users don't need time zone adjustments. If I set a reminder to do my workout at 8pm, it will be always 8pm - no matter I'm in New York or in Moscow. Would be weird if I opened my reminder app after Moscow -> New York flight and found my reminder suddenly shifted to the afternoon. Reminder fixed to local time fits this use case much better.
-
-2. Background analytics jobs. I want to know for what time of day users create more events. UTC offsets are completely useless for this task unless local time is present.
-
-3. Integration with external systems. Some API implement their own (not always optimal) approach to dates. For example, there are APIs that are not timezone aware and do not accept UTC offsets as input. For such cases you need local date time. Some APIs are time zone aware but still do not accept UTC offsets, for example [Outlook Task REST API][outlook-api]. You need local time zone to update due date of a task.
-
-Main take away from this: UTC offset does not replace local time with time zone and ignoring this fact will make your PM cry. And you don't want that. Remember that time is a very subjective matter and people have different perception of how it should work. So just make sure you have all data you need in place and be prepared for new datetime challenges.
+Main takeaway from this: UTC offset does not replace local time with time zone and ignoring this fact will make your product manager cry. And you don't want that. Remember that time is a very subjective matter and people have different perception of how it should work. So just make sure you have all data you need in place and be prepared for new datetime challenges.
 
 [outlook-api]: https://docs.microsoft.com/en-us/previous-versions/office/office-365-api/api/version-2.0/task-rest-operations#specifying-the-startdatetime-and-duedatetime-properties
